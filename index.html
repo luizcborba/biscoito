@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biscoito da Sorte</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="particulas">
+            <div v-for="n in 20" :key="n" class="particula" 
+                 :style="{ 
+                     left: Math.random() * 100 + '%',
+                     animationDelay: Math.random() * 6 + 's',
+                     animationDuration: (Math.random() * 3 + 3) + 's'
+                 }">
+            </div>
+        </div>
+
+        <div class="container">
+            <h1>🥠 Biscoito da Sorte</h1>
+            
+            <div v-if="!mensagemRevelada" class="instrucao">
+                Clique no biscoito para descobrir sua sorte!
+            </div>
+
+            <div class="biscoito-container">
+                <div class="biscoito" :class="{ quebrado: mensagemRevelada }" @click="quebrarBiscoito">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Biscoito inteiro -->
+                        <defs>
+                            <radialGradient id="biscoitoGradient" cx="0.3" cy="0.3">
+                                <stop offset="0%" style="stop-color:#f4d03f"/>
+                                <stop offset="50%" style="stop-color:#f1c40f"/>
+                                <stop offset="100%" style="stop-color:#d4ac0d"/>
+                            </radialGradient>
+                            <filter id="shadow">
+                                <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.3"/>
+                            </filter>
+                        </defs>
+                        
+                        <g v-if="!mensagemRevelada">
+                            <!-- Biscoito fechado -->
+                            <ellipse cx="100" cy="100" rx="80" ry="60" fill="url(#biscoitoGradient)" filter="url(#shadow)"/>
+                            <path d="M 40 100 Q 100 60 160 100 Q 100 140 40 100" fill="url(#biscoitoGradient)" filter="url(#shadow)"/>
+                            <ellipse cx="100" cy="100" rx="60" ry="40" fill="none" stroke="#d4ac0d" stroke-width="2"/>
+                            <!-- Detalhes do biscoito -->
+                            <circle cx="80" cy="85" r="2" fill="#d4ac0d"/>
+                            <circle cx="120" cy="115" r="2" fill="#d4ac0d"/>
+                            <circle cx="70" cy="115" r="1.5" fill="#d4ac0d"/>
+                            <circle cx="130" cy="85" r="1.5" fill="#d4ac0d"/>
+                        </g>
+                        
+                        <g v-else>
+                            <!-- Biscoito quebrado -->
+                            <path d="M 30 100 Q 70 70 90 100 L 85 120 Q 60 130 30 100" fill="url(#biscoitoGradient)" filter="url(#shadow)"/>
+                            <path d="M 110 100 Q 140 70 170 100 Q 150 130 120 120 L 110 100" fill="url(#biscoitoGradient)" filter="url(#shadow)"/>
+                            <!-- Papel da sorte -->
+                            <rect x="85" y="95" width="30" height="10" fill="white" stroke="#ddd" rx="2"/>
+                            <line x1="88" y1="98" x2="112" y2="98" stroke="#333" stroke-width="0.5"/>
+                            <line x1="88" y1="101" x2="110" y2="101" stroke="#333" stroke-width="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="mensagem-container">
+                <div v-if="mensagemRevelada" class="mensagem">
+                    {{ mensagemAtual }}
+                </div>
+            </div>
+
+            <button v-if="mensagemRevelada" @click="novoBiscoito" class="botao">
+                Novo Biscoito
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    mensagemRevelada: false,
+                    mensagemAtual: '',
+                    mensagens: [
+                        "Sua sorte está chegando! Mantenha os olhos abertos para as oportunidades.",
+                        "Um novo amor pode estar mais próximo do que você imagina.",
+                        "Acredite em si mesmo - você é mais forte do que pensa.",
+                        "A paciência será recompensada com grandes alegrias.",
+                        "Uma viagem inesperada trará momentos inesquecíveis.",
+                        "Sua generosidade voltará para você em dobro.",
+                        "O conhecimento que você busca chegará quando menos esperar.",
+                        "Uma amizade verdadeira se fortalecerá ainda mais.",
+                        "Confie na sua intuição - ela te guiará pelo caminho certo.",
+                        "Um projeto antigo finalmente dará frutos.",
+                        "A felicidade está nas pequenas coisas do dia a dia.",
+                        "Sua criatividade será reconhecida e valorizada.",
+                        "Uma conversa importante mudará sua perspectiva.",
+                        "O sucesso virá através da persistência e dedicação.",
+                        "Você está no caminho certo para alcançar seus sonhos.",
+                        "Uma surpresa agradável aguarda você esta semana.",
+                        "Sua bondade inspirará outras pessoas ao seu redor.",
+                        "Um novo capítulo emocionante está prestes a começar.",
+                        "A resposta que você procura está dentro de você.",
+                        "Grandes mudanças trarão grandes oportunidades.",
+                        "Sua família será uma fonte de força e alegria.",
+                        "Um talento oculto será descoberto em breve.",
+                        "A sorte favorece quem se prepara para ela.",
+                        "Uma reconciliação importante está no horizonte.",
+                        "Você está mais perto do sucesso do que imagina."
+                    ]
+                }
+            },
+            methods: {
+                quebrarBiscoito() {
+                    if (!this.mensagemRevelada) {
+                        this.mensagemRevelada = true;
+                        this.mensagemAtual = this.mensagens[Math.floor(Math.random() * this.mensagens.length)];
+                    }
+                },
+                novoBiscoito() {
+                    this.mensagemRevelada = false;
+                    this.mensagemAtual = '';
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
